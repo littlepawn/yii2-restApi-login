@@ -23,7 +23,7 @@ class ExtendFunction
     }
 
     /**
-     * 数据过滤
+     * 数据过滤(程序返回结果都为string)
      */
     public static function _safeData($data)
     {
@@ -41,6 +41,34 @@ class ExtendFunction
                 }
             } else {
                 $temp = htmlspecialchars(addslashes($data));
+            }
+        } else {
+            $temp = [];
+        }
+        return $temp;
+    }
+
+    /**
+     * 数据过滤(程序返回保留原本类型)
+     */
+    public static function _safeDataWithType($data)
+    {
+        if ($data) {
+            if (is_array($data)) {
+                $temp = [];
+                foreach ($data as $key => $value) {
+                    if (is_array($value)) {
+                        $temp[$key] = self::_safeDataWithType($value);
+                    } else {
+                        $type=gettype($value);
+                        $temp[$key] = htmlspecialchars(addslashes($value));
+                        settype($temp[$key],$type);
+                    }
+                }
+            } else {
+                $type=gettype($data);
+                $temp = htmlspecialchars(addslashes($data));
+                settype($temp,$type);
             }
         } else {
             $temp = [];

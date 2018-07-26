@@ -52,7 +52,8 @@ class BaseResponse extends JsonResponseFormatter
                 'success' => true,
                 'status'  => 200,
                 'res'     => [
-                    'data' => isset($response->data['data']) ? ExtendFunction::_safeData($response->data['data']) : ['uid' => Yii::$app->user->id],
+                    'data' => isset($response->data['data']) ? ExtendFunction::_safeDataWithType($response->data['data']) : ['uid' => Yii::$app->user->id],
+//                    'data' => isset($response->data['data']) ? ($response->data['data']) : ['uid' => Yii::$app->user->id],
                 ]
             ];
         } else {
@@ -62,11 +63,11 @@ class BaseResponse extends JsonResponseFormatter
                 'res'     => [
                     'code' => $response->data['code'] == 0 ? $response->statusCode : $response->data['code'],
                     'message' => isset($response->data['message']) ? htmlspecialchars(addslashes($response->data['message'])) : '系统异常',
-                    'data' => isset($response->data['data']) ? ExtendFunction::_safeData($response->data['data']) : ['uid' => Yii::$app->user->id],
+                    'data' => isset($response->data['data']) ? ExtendFunction::_safeDataWithType($response->data['data']) : ['uid' => Yii::$app->user->id],
                 ]
             ];
             if (YII_DEBUG) {
-                $data['info'] = ExtendFunction::_safeData($response->data);
+                $data['info'] = ExtendFunction::_safeDataWithType($response->data);
             }
         }
         $response->statusCode = 200;

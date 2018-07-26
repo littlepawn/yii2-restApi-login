@@ -29,7 +29,7 @@ class UserController extends BaseController {
     public function actionIndex(){
 //        throw new OperateException('100004');
 //        throw new UnauthorizedHttpException(11);
-        return ['data'=>[1,2,3,]];
+        return ['data'=>[1,2.44,true,"44",["aa"=>3,4]]];
     }
 
     public function actionRegister(){

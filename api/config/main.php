@@ -39,6 +39,7 @@ return [
             'class' => 'api\modules\v1\Module',
         ],
     ],
+
     'components' => [
         'request' => [
             'parsers' => [

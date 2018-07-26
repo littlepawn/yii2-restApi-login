@@ -31,4 +31,10 @@ class BaseController extends Controller{
             ],
         ]);
     }
+
+    public static function returnJson($data){
+        if($data)
+            return ['data'=>$data];
+        return ['data'=>['user_id'=>\Yii::$app->user->id]];
+    }
 }

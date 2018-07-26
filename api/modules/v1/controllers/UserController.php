@@ -4,6 +4,7 @@ namespace api\modules\v1\controllers;
 
 use api\controllers\BaseController;
 use api\exceptions\OperateException;
+use api\models\UserInfo;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\UnauthorizedHttpException;
@@ -26,22 +27,27 @@ class UserController extends BaseController {
      * @throws OperateException
      */
     public function actionIndex(){
-        throw new OperateException('100003');
+//        throw new OperateException('100004');
 //        throw new UnauthorizedHttpException(11);
-//        return ['data'=>[1,2,3,]];
+        return ['data'=>[1,2,3,]];
     }
 
-    public function actionLogin()
-    {
-        /** @var \filsh\yii2\oauth2server\Module $module */
-        $module = Yii::$app->getModule('oauth2');
-        Yii::$app->request->get('grant_type','grant_type');
-        Yii::$app->request->get('username','pawn');
-        Yii::$app->request->get('password','123456');
-        Yii::$app->request->get('client_id','testclient');
-        Yii::$app->request->get('client_secret','testpass');
-        $response = $module->getServer()->handleTokenRequest();
-//        var_dump($response->getParameters());exit;
-        return ['data'=>$response->getParameters()];
+    public function actionRegister(){
+        $params = Yii::$app->request->post();
+        $model = new UserInfo();
+    }
+
+    /**
+     * @return array
+     * @throws OperateException
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function actionLogin(){
+        $params = Yii::$app->request->post();
+        $model = new UserInfo();
+        $model->setScenario(UserInfo::SCENARIO_USER_LOGIN);
+        $model->load($params, '');
+        $result = $model->login();
+        return static::returnJson($result);
     }
 }

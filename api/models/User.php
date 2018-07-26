@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: wj992
- * Date: 2018/3/14
- * Time: 14:42
- */
-
 namespace api\models;
 
 use Yii;
@@ -14,6 +7,7 @@ class User extends \common\models\User implements \OAuth2\Storage\UserCredential
 
     /**
      * Implemented for Oauth2 Interface
+     * @throws \yii\base\InvalidConfigException
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
@@ -30,7 +24,7 @@ class User extends \common\models\User implements \OAuth2\Storage\UserCredential
      */
     public function checkUserCredentials($username, $password)
     {
-        $user = static::findByUsername($username);
+        $user = static::findByUsernameOrEmail($username);
         if (empty($user)) {
             return false;
         }
@@ -42,7 +36,7 @@ class User extends \common\models\User implements \OAuth2\Storage\UserCredential
      */
     public function getUserDetails($username)
     {
-        $user = static::findByUsername($username);
+        $user = static::findByUsernameOrEmail($username);
         return ['user_id' => $user->getId()];
     }
 }

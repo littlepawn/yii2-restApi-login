@@ -18,7 +18,7 @@ class BaseController extends Controller{
                     ['class' => HttpBearerAuth::className()],
                     ['class' => QueryParamAuth::className(), 'tokenParam' => 'accessToken'],
                 ],
-                'optional'=>['login'],
+                'optional'=>['login','index'],
             ],
             'exceptionFilter'=>[
                 'class'=>ErrorToExceptionFilter::className(),

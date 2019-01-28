@@ -59,7 +59,7 @@ return [
     'as access' => [
         'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [
-            'site/*',//允许访问的节点，可自行添加
+            'site/*','elastic-search/*',//允许访问的节点，可自行添加
         ]
     ],
     'params' => $params,

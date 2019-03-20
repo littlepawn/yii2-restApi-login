@@ -1,8 +1,36 @@
 # yii2-restApi-login
 basic rest api login module with yii2
 
-composer.json增加"mdmsoft/yii2-admin": "~2.0"
+## oauth2.0
+php composer.phar require –prefer-dist filsh/yii2-oauth2-server “*”
+main.php
+```
+‘modules’ => [
+    ‘oauth2’ => [
+        ‘class’ => ‘filsh\yii2\oauth2server\Module’,
+        ‘tokenParamName’ => ‘accessToken’,
+        ‘tokenAccessLifetime’ => 3600 * 24,
+        ‘storageMap’ => [
+            ‘user_credentials’ => ‘common\models\User’,
+        ],
+        ‘grantTypes’ => [
+            ‘user_credentials’ => [
+                ‘class’ => ‘OAuth2\GrantType\UserCredentials’,
+            ],
+            ‘refresh_token’ => [
+                ‘class’ => ‘OAuth2\GrantType\RefreshToken’,
+                ‘always_issue_new_refresh_token’ => true
+            ]
+        ]
+    ],
+    ‘v1’ => [
+        ‘class’ => ‘passport\modules\v1\Module’,
+    ],
+],
+```
 
+## RBAC
+composer.json增加"mdmsoft/yii2-admin": "~2.0"
 main.php
 ```
 return [
@@ -39,7 +67,7 @@ return [
 yii migrate --migrationPath=@mdm/admin/migrations
 yii migrate --migrationPath=@yii/rbac/migrations
 
-##tips:
+## tips:
 
 1.filsh/yii2-oauth2-server在yii2的2.0.13版本有bug,解决方案：
 更改vendor/filsh/Module.php里面的函数
@@ -61,5 +89,24 @@ yii migrate --migrationPath=@yii/rbac/migrations
     }
     
    ```
+2.内部实现grant_type=>password
+```
+        /** @var \filsh\yii2\oauth2server\Module $module */
+        $module = Yii::$app->getModule('oauth2');
+        //获取oauth框架的请求体,并覆盖其请求方式
+        $filshRequest=$module->getRequest();
+        $filshRequest->request=array_merge(Yii::$app->request->post(),['grant_type'=>'password','client_id'=>'testclient','client_secret'=>'testpass']);
+        $module->set('request',$filshRequest);
+        $oauthResponse = $module->getServer()->handleTokenRequest()->getParameters();
+        if(!isset($oauthResponse['access_token']))
+            throw new OperateException(StatusCode::USER_GENERATE_ACCESS_TOKEN_FAILED);
+        return [
+            'accessToken' => $oauthResponse['access_token'],
+            'userId'=>$this->uid,
+            'expiresIn'=>$oauthResponse['expires_in'],
+            'tokenType'=>$oauthResponse['token_type'],
+            'refreshToken'=>$oauthResponse['refresh_token'],
+        ];
+```
 
-2.其他配置参考http://www.shuijingwanwq.com/2015/08/26/649/
+3.其他配置参考http://www.shuijingwanwq.com/2015/08/26/649/

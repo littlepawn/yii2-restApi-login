@@ -109,4 +109,23 @@ yii migrate --migrationPath=@yii/rbac/migrations
         ];
 ```
 
-3.其他配置参考http://www.shuijingwanwq.com/2015/08/26/649/
+3.refresh token刷新
+```
+        /** @var \filsh\yii2\oauth2server\Module $module */
+        $module = Yii::$app->getModule('oauth2');
+        //获取oauth框架的请求体,并覆盖其请求方式
+        $filshRequest=$module->getRequest();
+        $filshRequest->request=['grant_type'=>'refresh_token','client_id'=>'testclient','client_secret'=>'testpass','refresh_token'=>$this->refreshToken];
+        $module->set('request',$filshRequest);
+        $oauthResponse = $module->getServer()->handleTokenRequest()->getParameters();
+        if(!isset($oauthResponse['access_token']))
+            throw new OperateException(StatusCode::USER_GENERATE_ACCESS_TOKEN_FAILED);
+        return [
+            'accessToken' => $oauthResponse['access_token'],
+            'expiresIn'=>$oauthResponse['expires_in'],
+            'tokenType'=>$oauthResponse['token_type'],
+            'refreshToken'=>$oauthResponse['refresh_token'],
+        ];
+```
+
+4.其他配置参考http://www.shuijingwanwq.com/2015/08/26/649/

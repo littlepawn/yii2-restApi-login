@@ -4,7 +4,7 @@ basic rest api login module with yii2
 composer.json增加"mdmsoft/yii2-admin": "~2.0"
 
 main.php
-
+```
 return [
     'modules' => [
         'admin' => [
@@ -34,11 +34,12 @@ return [
         ]
     ],
 ];
+```
 
 yii migrate --migrationPath=@mdm/admin/migrations
 yii migrate --migrationPath=@yii/rbac/migrations
 
-tips:
+##tips:
 
 1.filsh/yii2-oauth2-server在yii2的2.0.13版本有bug,解决方案：
 更改vendor/filsh/Module.php里面的函数

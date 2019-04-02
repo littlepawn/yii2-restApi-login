@@ -2,7 +2,7 @@
 basic rest api login module with yii2
 
 ## oauth2.0
-php composer.phar require –prefer-dist filsh/yii2-oauth2-server “*”
+php composer.phar require --prefer-dist filsh/yii2-oauth2-server "*"
 main.php
 ```
 ‘modules’ => [
